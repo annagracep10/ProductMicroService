@@ -5,6 +5,8 @@ import com.techphantomexample.Productmicroservice.model.Plant;
 import com.techphantomexample.Productmicroservice.model.Planter;
 import com.techphantomexample.Productmicroservice.model.Seed;
 import com.techphantomexample.Productmicroservice.service.PlantService;
+import com.techphantomexample.Productmicroservice.service.PlanterService;
+import com.techphantomexample.Productmicroservice.service.SeedService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,10 @@ public class ProductController {
 
     @Autowired
     private PlantService plantService;
+    @Autowired
+    private PlanterService planterService;
+    @Autowired
+    private SeedService seedService;
 
 
 }
