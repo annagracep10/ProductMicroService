@@ -1,10 +1,9 @@
 package com.techphantomexample.Productmicroservice.model;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
-public abstract class  BaseProduct {
+@MappedSuperclass
+public class  BaseProduct {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,6 +22,10 @@ public abstract class  BaseProduct {
         this.price = price;
         this.category = category;
         this.quantity = quantity;
+    }
+
+    public BaseProduct() {
+
     }
 
     public int getId() {
