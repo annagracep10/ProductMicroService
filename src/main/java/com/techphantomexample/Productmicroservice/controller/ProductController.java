@@ -4,8 +4,7 @@ import com.techphantomexample.Productmicroservice.model.BaseProduct;
 import com.techphantomexample.Productmicroservice.model.Plant;
 import com.techphantomexample.Productmicroservice.model.Planter;
 import com.techphantomexample.Productmicroservice.model.Seed;
-import com.techphantomexample.Productmicroservice.service.PlantService;
-import com.techphantomexample.Productmicroservice.service.PlantValidation;
+import com.techphantomexample.Productmicroservice.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +24,13 @@ public class ProductController {
     private static final Logger log = LoggerFactory.getLogger(ProductController.class);
 
     PlantService plantService;
+    PlanterService planterService;
+    SeedService seedService;
 
-    public ProductController(PlantService plantService) {
+    public ProductController(PlantService plantService, PlanterService planterService, SeedService seedService) {
         this.plantService = plantService;
+        this.planterService = planterService;
+        this.seedService = seedService;
     }
 
     @PostMapping("/plant")
@@ -111,4 +114,178 @@ public class ProductController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
+
+
+    @PostMapping("/planter")
+    public ResponseEntity<CreateResponse> createPlanter(@RequestBody Planter planter) {
+        try {
+            String result = planterService.createPlanter(planter);
+            HttpStatus httpStatus = HttpStatus.CREATED;
+
+            CreateResponse response = new CreateResponse(result, httpStatus.value());
+            return ResponseEntity.status(httpStatus).body(response);
+        } catch (PlanterValidation e) {
+            HttpStatus status;
+            if (e.getMessage().equals("Planter with same name already exists")) {
+                status = HttpStatus.CONFLICT;
+            } else if (e.getMessage().equals("Name, Material, and Color are Mandatory")) {
+                status = HttpStatus.BAD_REQUEST;
+            } else {
+                status = HttpStatus.INTERNAL_SERVER_ERROR;
+            }
+            CreateResponse response = new CreateResponse(e.getMessage(), status.value());
+            return ResponseEntity.status(status).body(response);
+        }
+    }
+
+    @PutMapping("/planter/{id}")
+    public ResponseEntity<CreateResponse> updatePlanter(@PathVariable int id, @RequestBody Planter planter) {
+        try {
+            String result = planterService.updatePlanter(id, planter);
+            HttpStatus httpStatus = HttpStatus.OK;
+
+            CreateResponse response = new CreateResponse(result, httpStatus.value());
+            return ResponseEntity.status(httpStatus).body(response);
+        } catch (PlanterValidation e) {
+            HttpStatus status;
+            if (e.getMessage().equals("Planter with same name already exists")) {
+                status = HttpStatus.CONFLICT;
+            } else if (e.getMessage().equals("Name, Material, and Color are Mandatory") ) {
+                status = HttpStatus.BAD_REQUEST;
+            } else if (e.getMessage().equals("Planter not found")){
+                status = HttpStatus.NOT_FOUND;
+            }
+            else {
+                status = HttpStatus.INTERNAL_SERVER_ERROR;
+            }
+            CreateResponse response = new CreateResponse(e.getMessage(), status.value());
+            return ResponseEntity.status(status).body(response);
+        }
+    }
+
+    @GetMapping("/planter")
+    public ResponseEntity<List<Planter>> getAllPlanters() {
+        try {
+            List<Planter> planters = planterService.getAllPlanters();
+            return ResponseEntity.ok(planters);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @GetMapping("/planter/{id}")
+    public ResponseEntity<Object> getPlanterById(@PathVariable int id) {
+        Optional<Planter> planter = Optional.ofNullable(planterService.getPlanter(id));
+        if (planter.isPresent()) {
+            return ResponseEntity.ok(planter.get());
+        } else {
+            CreateResponse response = new CreateResponse("Planter not found", HttpStatus.NOT_FOUND.value());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
+    }
+
+    @DeleteMapping("/planter/{id}")
+    public ResponseEntity<CreateResponse> deletePlanterById(@PathVariable int id) {
+        try {
+            String result = planterService.deletePlanter(id);
+            CreateResponse response = new CreateResponse(result, HttpStatus.OK.value());
+            return ResponseEntity.ok(response);
+        } catch (PlanterValidation e) {
+            HttpStatus status;
+            if (e.getMessage().equals("Planter not found")) {
+                status = HttpStatus.NOT_FOUND;
+            } else {
+                status = HttpStatus.INTERNAL_SERVER_ERROR;
+            }
+            CreateResponse response = new CreateResponse(e.getMessage(), status.value());
+            return ResponseEntity.status(status).body(response);
+        }
+    }
+
+    @PostMapping("/seed")
+    public ResponseEntity<CreateResponse> createSeed(@RequestBody Seed seed) {
+        try {
+            String result = seedService.createSeed(seed);
+            HttpStatus httpStatus = HttpStatus.CREATED;
+
+            CreateResponse response = new CreateResponse(result, httpStatus.value());
+            return ResponseEntity.status(httpStatus).body(response);
+        } catch (SeedValidation e) {
+            HttpStatus status;
+            if (e.getMessage().equals("Seed with the same name already exists")) {
+                status = HttpStatus.CONFLICT;
+            } else if (e.getMessage().equals("Name, Type, and category are Mandatory")) {
+                status = HttpStatus.BAD_REQUEST;
+            } else {
+                status = HttpStatus.INTERNAL_SERVER_ERROR;
+            }
+            CreateResponse response = new CreateResponse(e.getMessage(), status.value());
+            return ResponseEntity.status(status).body(response);
+        }
+    }
+
+    @PutMapping("/seed/{id}")
+    public ResponseEntity<CreateResponse> updateSeed(@PathVariable int id, @RequestBody Seed seed) {
+        try {
+            String result = seedService.updateSeed(id, seed);
+            HttpStatus httpStatus = HttpStatus.OK;
+
+            CreateResponse response = new CreateResponse(result, httpStatus.value());
+            return ResponseEntity.status(httpStatus).body(response);
+        } catch (SeedValidation e) {
+            HttpStatus status;
+            if (e.getMessage().equals("Seed with the same name already exists")) {
+                status = HttpStatus.CONFLICT;
+            } else if (e.getMessage().equals("Name, Type, and category are Mandatory") ) {
+                status = HttpStatus.BAD_REQUEST;
+            } else if (e.getMessage().equals("Seed not found")){
+                status = HttpStatus.NOT_FOUND;
+            } else {
+                status = HttpStatus.INTERNAL_SERVER_ERROR;
+            }
+            CreateResponse response = new CreateResponse(e.getMessage(), status.value());
+            return ResponseEntity.status(status).body(response);
+        }
+    }
+
+    @GetMapping("/seed")
+    public ResponseEntity<List<Seed>> getAllSeeds() {
+        try {
+            List<Seed> seeds = seedService.getAllSeeds();
+            return ResponseEntity.ok(seeds);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @GetMapping("/seed/{id}")
+    public ResponseEntity<Object> getSeedById(@PathVariable int id) {
+        Optional<Seed> seed = Optional.ofNullable(seedService.getSeed(id));
+        if (seed.isPresent()) {
+            return ResponseEntity.ok(seed.get());
+        } else {
+            CreateResponse response = new CreateResponse("Seed not found", HttpStatus.NOT_FOUND.value());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
+    }
+
+    @DeleteMapping("/seed/{id}")
+    public ResponseEntity<CreateResponse> deleteSeedById(@PathVariable int id) {
+        try {
+            String result = seedService.deleteSeed(id);
+            CreateResponse response = new CreateResponse(result, HttpStatus.OK.value());
+            return ResponseEntity.ok(response);
+        } catch (SeedValidation e) {
+            HttpStatus status;
+            if (e.getMessage().equals("Seed not found")) {
+                status = HttpStatus.NOT_FOUND;
+            } else {
+                status = HttpStatus.INTERNAL_SERVER_ERROR;
+            }
+            CreateResponse response = new CreateResponse(e.getMessage(), status.value());
+            return ResponseEntity.status(status).body(response);
+        }
+    }
+
+
 }

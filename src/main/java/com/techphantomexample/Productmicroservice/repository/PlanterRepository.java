@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PlanterRepository extends JpaRepository< Planter , Integer>{
 
+    boolean existsByName(String name);
 }
