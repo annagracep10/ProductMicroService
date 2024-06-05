@@ -1,6 +1,7 @@
 package com.techphantomexample.Productmicroservice.model;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import lombok.*;
 
 @Entity
 @Table(name="plant_info")
@@ -8,14 +9,6 @@ public class Plant extends BaseProduct {
     private String typeOfPlant;
     private String sunlightRequirements;
     private String wateringFrequency;
-
-    public Plant(String name, String description, double price, String category, int quantity, String typeOfPlant, String sunlightRequirements, String wateringFrequency) {
-        super(name, description, price, category, quantity);
-        this.typeOfPlant = typeOfPlant;
-        this.sunlightRequirements = sunlightRequirements;
-        this.wateringFrequency = wateringFrequency;
-    }
-
 
     public String getTypeOfPlant() {
         return typeOfPlant;
@@ -38,6 +31,16 @@ public class Plant extends BaseProduct {
     }
 
     public void setWateringFrequency(String wateringFrequency) {
+        this.wateringFrequency = wateringFrequency;
+    }
+
+    public Plant() {
+    }
+
+    public Plant(String name, String description, double price, String category, int quantity, String typeOfPlant, String sunlightRequirements, String wateringFrequency) {
+        super(name, description, price, category, quantity);
+        this.typeOfPlant = typeOfPlant;
+        this.sunlightRequirements = sunlightRequirements;
         this.wateringFrequency = wateringFrequency;
     }
 }

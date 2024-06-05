@@ -3,7 +3,7 @@ package com.techphantomexample.Productmicroservice.model;
 import jakarta.persistence.*;
 
 @MappedSuperclass
-public class  BaseProduct {
+public abstract class  BaseProduct {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,6 +15,8 @@ public class  BaseProduct {
     private String category;
     private int quantity;
 
+    public BaseProduct() {
+    }
 
     public BaseProduct(String name, String description, double price, String category, int quantity) {
         this.name = name;
@@ -24,12 +26,12 @@ public class  BaseProduct {
         this.quantity = quantity;
     }
 
-    public BaseProduct() {
-
-    }
-
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -71,5 +73,4 @@ public class  BaseProduct {
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
-
 }
