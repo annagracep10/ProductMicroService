@@ -1,9 +1,6 @@
 package com.techphantomexample.Productmicroservice.controller;
 
-import com.techphantomexample.Productmicroservice.model.BaseProduct;
-import com.techphantomexample.Productmicroservice.model.Plant;
-import com.techphantomexample.Productmicroservice.model.Planter;
-import com.techphantomexample.Productmicroservice.model.Seed;
+import com.techphantomexample.Productmicroservice.model.*;
 import com.techphantomexample.Productmicroservice.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,12 +25,15 @@ public class ProductController {
     PlantService plantService;
     PlanterService planterService;
     SeedService seedService;
+    RestTemplate restTemplate;
 
-    public ProductController(PlantService plantService, PlanterService planterService, SeedService seedService) {
+    public ProductController(PlantService plantService, PlanterService planterService, SeedService seedService, RestTemplate restTemplate) {
         this.plantService = plantService;
         this.planterService = planterService;
         this.seedService = seedService;
+        this.restTemplate = restTemplate;
     }
+
 
     @PostMapping("/plant")
     public ResponseEntity<CreateResponse> createProduct(@RequestBody Plant plant) {
@@ -284,6 +286,29 @@ public class ProductController {
             }
             CreateResponse response = new CreateResponse(e.getMessage(), status.value());
             return ResponseEntity.status(status).body(response);
+        }
+    }
+
+
+    @GetMapping("/products")
+    public ResponseEntity<?> getAllProducts() {
+        try {
+            List<Plant> plants = plantService.getAllPlants();
+            List<Planter> planters = planterService.getAllPlanters();
+            List<Seed> seeds = seedService.getAllSeeds();
+
+            CombinedProduct combinedProduct = new CombinedProduct(plants, planters, seeds);
+
+            log.error("combined");
+
+            String url = "http://localhost:9090/user/products";
+            restTemplate.postForEntity(url, combinedProduct, Void.class);
+            log.error("heree");
+
+            return ResponseEntity.ok(combinedProduct);
+        } catch (Exception e) {
+            log.error("Error retrieving all products", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
