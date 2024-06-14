@@ -5,6 +5,7 @@ import com.techphantomexample.Productmicroservice.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -35,10 +36,13 @@ public class ProductController {
     }
 
 
+
+
     @PostMapping("/plant")
     public ResponseEntity<CreateResponse> createProduct(@RequestBody Plant plant) {
         try {
             String result = plantService.createPlant(plant);
+            System.out.println(plant);
             HttpStatus httpStatus = HttpStatus.CREATED;
 
             CreateResponse response = new CreateResponse(result, httpStatus.value());
@@ -47,7 +51,7 @@ public class ProductController {
             HttpStatus status;
             if (e.getMessage().equals("Plant with same name already exists")) {
                 status = HttpStatus.CONFLICT;
-            } else if (e.getMessage().equals("Name, Type of Plant and Category are Mandatory")) {
+            } else if (e.getMessage().equals("Name, Type of Plant are Mandatory")) {
                 status = HttpStatus.BAD_REQUEST;
             } else {
                 status = HttpStatus.INTERNAL_SERVER_ERROR;
@@ -69,7 +73,7 @@ public class ProductController {
             HttpStatus status;
             if (e.getMessage().equals("Plant with same name already exists")) {
                 status = HttpStatus.CONFLICT;
-            } else if (e.getMessage().equals("Name, Type of Plant and Category are Mandatory")) {
+            } else if (e.getMessage().equals("Name, Type of Plant are Mandatory")) {
                 status = HttpStatus.BAD_REQUEST;
             } else if (e.getMessage().equals("Plant not found")) {
                 status = HttpStatus.NOT_FOUND;
@@ -216,7 +220,7 @@ public class ProductController {
             HttpStatus status;
             if (e.getMessage().equals("Seed with the same name already exists")) {
                 status = HttpStatus.CONFLICT;
-            } else if (e.getMessage().equals("Name, Type, and category are Mandatory")) {
+            } else if (e.getMessage().equals("Name, Type are Mandatory")) {
                 status = HttpStatus.BAD_REQUEST;
             } else {
                 status = HttpStatus.INTERNAL_SERVER_ERROR;
@@ -238,7 +242,7 @@ public class ProductController {
             HttpStatus status;
             if (e.getMessage().equals("Seed with the same name already exists")) {
                 status = HttpStatus.CONFLICT;
-            } else if (e.getMessage().equals("Name, Type, and category are Mandatory") ) {
+            } else if (e.getMessage().equals("Name, Type are Mandatory") ) {
                 status = HttpStatus.BAD_REQUEST;
             } else if (e.getMessage().equals("Seed not found")){
                 status = HttpStatus.NOT_FOUND;
@@ -298,13 +302,7 @@ public class ProductController {
             List<Seed> seeds = seedService.getAllSeeds();
 
             CombinedProduct combinedProduct = new CombinedProduct(plants, planters, seeds);
-
             log.error("combined");
-
-            String url = "http://localhost:9090/user/products";
-            restTemplate.postForEntity(url, combinedProduct, Void.class);
-            log.error("heree");
-
             return ResponseEntity.ok(combinedProduct);
         } catch (Exception e) {
             log.error("Error retrieving all products", e);

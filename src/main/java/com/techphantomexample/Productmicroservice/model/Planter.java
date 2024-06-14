@@ -1,9 +1,11 @@
 package com.techphantomexample.Productmicroservice.model;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.techphantomexample.Productmicroservice.model.BaseProduct;
 import jakarta.persistence.*;
 import lombok.*;
 
+//@JsonTypeName("planter")
 @Entity
 @Table(name="planter_info")
 public class Planter extends BaseProduct {

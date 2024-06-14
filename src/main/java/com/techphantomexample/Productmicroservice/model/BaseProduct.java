@@ -1,8 +1,16 @@
 package com.techphantomexample.Productmicroservice.model;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import jakarta.persistence.*;
 
 @MappedSuperclass
+//@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "category", visible = true)
+//@JsonSubTypes({
+//        @JsonSubTypes.Type(value = Plant.class, name = "plant"),
+//        @JsonSubTypes.Type(value = Planter.class, name = "planter"),
+//        @JsonSubTypes.Type(value = Seed.class, name = "seed")
+//})
 public abstract class  BaseProduct {
 
     @Id

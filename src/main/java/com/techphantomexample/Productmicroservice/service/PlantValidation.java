@@ -20,8 +20,8 @@ public class PlantValidation extends RuntimeException{
 
     public static void validatePlant(Plant plant, PlantRepository plantRepository){
 
-        if(isNullOrEmpty(plant.getName())||isNullOrEmpty(plant.getTypeOfPlant())||isNullOrEmpty(plant.getCategory())){
-            throw new PlantValidation("Name , Type of Plant and Category are Mandatory");
+        if(isNullOrEmpty(plant.getName())||isNullOrEmpty(plant.getTypeOfPlant())){
+            throw new PlantValidation("Name, Type of Plant are Mandatory");
         }
 
 
@@ -33,8 +33,8 @@ public class PlantValidation extends RuntimeException{
 
     public static void validateUpdatePlant(Plant plant){
 
-        if(isNullOrEmpty(plant.getName())||isNullOrEmpty(plant.getTypeOfPlant())||isNullOrEmpty(plant.getCategory())){
-            throw new PlantValidation("Name , Type of Plant and Category are Mandatory");
+        if(isNullOrEmpty(plant.getName())||isNullOrEmpty(plant.getTypeOfPlant())){
+            throw new PlantValidation("Name, Type of Plant are Mandatory");
         }
 
     }
