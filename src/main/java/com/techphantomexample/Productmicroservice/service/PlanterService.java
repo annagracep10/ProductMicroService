@@ -35,10 +35,8 @@ public class PlanterService {
 
             Planter existingPlanter = planterRepository.findById(id).get();
 
-            // Validate the updated planter details
             PlanterValidation.validateUpdatePlanter(newPlanterDetails);
 
-            // Update the existing planter details
             existingPlanter.setName(newPlanterDetails.getName());
             existingPlanter.setDescription(newPlanterDetails.getDescription());
             existingPlanter.setPrice(newPlanterDetails.getPrice());
@@ -74,7 +72,7 @@ public class PlanterService {
     public Planter getPlanter(int planterId) {
         try {
             if (!planterRepository.existsById(planterId)) {
-                return null; // Return null if planter does not exist
+                return null;
             }
             return planterRepository.findById(planterId).get();
         } catch (Exception e) {

@@ -14,7 +14,7 @@ public class CombinedProduct {
         this.seeds = seeds;
     }
 
-    // Getters and setters
+
     public List<Plant> getPlants() {
         return plants;
     }

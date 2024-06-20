@@ -35,10 +35,10 @@ public class SeedService {
 
             Seed existingSeed = seedRepository.findById(id).get();
 
-            // Validate the updated seed details
+
             SeedValidation.validateUpdateSeed(newSeedDetails);
 
-            // Update the existing seed details
+
             existingSeed.setName(newSeedDetails.getName());
             existingSeed.setDescription(newSeedDetails.getDescription());
             existingSeed.setPrice(newSeedDetails.getPrice());
@@ -71,7 +71,7 @@ public class SeedService {
     public Seed getSeed(int seedId) {
         try {
             if (!seedRepository.existsById(seedId)) {
-                return null; // Return null if seed does not exist
+                return null;
             }
             return seedRepository.findById(seedId).get();
         } catch (Exception e) {

@@ -2,7 +2,6 @@ package com.techphantomexample.Productmicroservice.service;
 
 import com.techphantomexample.Productmicroservice.model.Plant;
 import com.techphantomexample.Productmicroservice.repository.PlantRepository;
-import com.techphantomexample.Productmicroservice.repository.PlanterRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -36,10 +35,9 @@ public class PlantService {
 
             Plant existingPlant = (Plant) plantRepository.findById(id).get();
 
-            // Validate the updated plant details
+
             PlantValidation.validateUpdatePlant(newPlantDetails);
 
-            // Update the existing plant details
             existingPlant.setName(newPlantDetails.getName());
             existingPlant.setDescription(newPlantDetails.getDescription());
             existingPlant.setPrice(newPlantDetails.getPrice());
@@ -75,7 +73,7 @@ public class PlantService {
     public Plant getPlant(int plantId) {
         try {
             if (!plantRepository.existsById(plantId)) {
-                return null; // Return null if plant does not exist
+                return null;
             }
             return (Plant) plantRepository.findById(plantId).get();
         } catch (Exception e) {
