@@ -1,4 +1,4 @@
-package com.techphantomexample.Productmicroservice.service;
+package com.techphantomexample.Productmicroservice.exception;
 
 import com.techphantomexample.Productmicroservice.model.Seed;
 import com.techphantomexample.Productmicroservice.repository.SeedRepository;

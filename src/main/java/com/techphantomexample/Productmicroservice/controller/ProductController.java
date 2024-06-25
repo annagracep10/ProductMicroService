@@ -1,19 +1,17 @@
 package com.techphantomexample.Productmicroservice.controller;
 
+import com.techphantomexample.Productmicroservice.exception.PlantValidation;
+import com.techphantomexample.Productmicroservice.exception.PlanterValidation;
+import com.techphantomexample.Productmicroservice.exception.SeedValidation;
 import com.techphantomexample.Productmicroservice.model.*;
 import com.techphantomexample.Productmicroservice.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,278 +34,123 @@ public class ProductController {
     }
 
 
-
-
     @PostMapping("/plant")
-    public ResponseEntity<CreateResponse> createProduct(@RequestBody Plant plant) {
-        try {
-            String result = plantService.createPlant(plant);
-            System.out.println(plant);
-            HttpStatus httpStatus = HttpStatus.CREATED;
-
-            CreateResponse response = new CreateResponse(result, httpStatus.value());
-            return ResponseEntity.status(httpStatus).body(response);
-        } catch (PlantValidation e) {
-            HttpStatus status;
-            if (e.getMessage().equals("Plant with same name already exists")) {
-                status = HttpStatus.CONFLICT;
-            } else if (e.getMessage().equals("Name, Type of Plant are Mandatory")) {
-                status = HttpStatus.BAD_REQUEST;
-            } else {
-                status = HttpStatus.INTERNAL_SERVER_ERROR;
-            }
-            CreateResponse response = new CreateResponse(e.getMessage(), status.value());
-            return ResponseEntity.status(status).body(response);
-        }
+    public CreateResponse createProduct(@RequestBody Plant plant) {
+        String response = plantService.createPlant(plant);
+        CreateResponse createResponse = new CreateResponse(response, HttpStatus.OK.value());
+        return createResponse;
     }
 
     @PutMapping("/plant/{id}")
-    public ResponseEntity<CreateResponse> updatePlant(@PathVariable int id, @RequestBody Plant plant) {
-        try {
-            String result = plantService.updatePlant(id, plant);
-            HttpStatus httpStatus = HttpStatus.OK;
-
-            CreateResponse response = new CreateResponse(result, httpStatus.value());
-            return ResponseEntity.status(httpStatus).body(response);
-        } catch (PlantValidation e) {
-            HttpStatus status;
-            if (e.getMessage().equals("Plant with same name already exists")) {
-                status = HttpStatus.CONFLICT;
-            } else if (e.getMessage().equals("Name, Type of Plant are Mandatory")) {
-                status = HttpStatus.BAD_REQUEST;
-            } else if (e.getMessage().equals("Plant not found")) {
-                status = HttpStatus.NOT_FOUND;
-            } else {
-                status = HttpStatus.INTERNAL_SERVER_ERROR;
-            }
-            CreateResponse response = new CreateResponse(e.getMessage(), status.value());
-            return ResponseEntity.status(status).body(response);
-        }
+    public CreateResponse updatePlant(@PathVariable int id, @RequestBody Plant plant) {
+        String response = plantService.updatePlant(id, plant);
+        CreateResponse createResponse = new CreateResponse(response, HttpStatus.OK.value());
+        return createResponse;
     }
 
     @GetMapping("/plant")
     public ResponseEntity<List<Plant>> getAllPlants() {
-        try {
-            List<Plant> plants = plantService.getAllPlants();
-            return ResponseEntity.ok(plants);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        List<Plant> plants = plantService.getAllPlants();
+        return new ResponseEntity<>(plants, HttpStatus.OK);
     }
 
     @GetMapping("/plant/{id}")
-    public ResponseEntity<Object> getPlantById(@PathVariable int id) {
-        Optional<Plant> plant = Optional.ofNullable(plantService.getPlant(id));
-        if (plant.isPresent()) {
-            return ResponseEntity.ok(plant.get());
-        } else {
-            CreateResponse response = new CreateResponse("Plant not found", HttpStatus.NOT_FOUND.value());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-        }
+    public ResponseEntity<?> getPlantById(@PathVariable int id) {
+        Plant plant = plantService.getPlant(id);
+        return new ResponseEntity<>(plant, HttpStatus.OK);
     }
 
     @DeleteMapping("/plant/{id}")
-    public ResponseEntity<CreateResponse> deletePlantById(@PathVariable int id) {
-        try {
-            String result = plantService.deletePlant(id);
-            CreateResponse response = new CreateResponse(result, HttpStatus.OK.value());
-            return ResponseEntity.ok(response);
-        } catch (PlantValidation e) {
-            CreateResponse response = new CreateResponse(e.getMessage(), HttpStatus.NOT_FOUND.value());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-        } catch (Exception e) {
-            CreateResponse response = new CreateResponse("An error occurred", HttpStatus.INTERNAL_SERVER_ERROR.value());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-        }
+    public CreateResponse deletePlantById(@PathVariable int id) {
+        String response = plantService.deletePlant(id);
+        CreateResponse createresponse = new CreateResponse(response, HttpStatus.OK.value());
+        return createresponse;
     }
+
+
+
 
 
     @PostMapping("/planter")
-    public ResponseEntity<CreateResponse> createPlanter(@RequestBody Planter planter) {
-        try {
-            String result = planterService.createPlanter(planter);
-            HttpStatus httpStatus = HttpStatus.CREATED;
-
-            CreateResponse response = new CreateResponse(result, httpStatus.value());
-            return ResponseEntity.status(httpStatus).body(response);
-        } catch (PlanterValidation e) {
-            HttpStatus status;
-            if (e.getMessage().equals("Planter with same name already exists")) {
-                status = HttpStatus.CONFLICT;
-            } else if (e.getMessage().equals("Name, Material, and Color are Mandatory")) {
-                status = HttpStatus.BAD_REQUEST;
-            } else {
-                status = HttpStatus.INTERNAL_SERVER_ERROR;
-            }
-            CreateResponse response = new CreateResponse(e.getMessage(), status.value());
-            return ResponseEntity.status(status).body(response);
-        }
+    public CreateResponse createPlanter(@RequestBody Planter planter) {
+        String response = planterService.createPlanter(planter);
+        CreateResponse createResponse = new CreateResponse(response, HttpStatus.OK.value());
+        return createResponse;
     }
 
     @PutMapping("/planter/{id}")
-    public ResponseEntity<CreateResponse> updatePlanter(@PathVariable int id, @RequestBody Planter planter) {
-        try {
-            String result = planterService.updatePlanter(id, planter);
-            HttpStatus httpStatus = HttpStatus.OK;
-
-            CreateResponse response = new CreateResponse(result, httpStatus.value());
-            return ResponseEntity.status(httpStatus).body(response);
-        } catch (PlanterValidation e) {
-            HttpStatus status;
-            if (e.getMessage().equals("Planter with same name already exists")) {
-                status = HttpStatus.CONFLICT;
-            } else if (e.getMessage().equals("Name, Material, and Color are Mandatory") ) {
-                status = HttpStatus.BAD_REQUEST;
-            } else if (e.getMessage().equals("Planter not found")){
-                status = HttpStatus.NOT_FOUND;
-            }
-            else {
-                status = HttpStatus.INTERNAL_SERVER_ERROR;
-            }
-            CreateResponse response = new CreateResponse(e.getMessage(), status.value());
-            return ResponseEntity.status(status).body(response);
-        }
+    public CreateResponse updatePlanter(@PathVariable int id, @RequestBody Planter planter) {
+        String response = planterService.updatePlanter(id, planter);
+        CreateResponse createResponse = new CreateResponse(response, HttpStatus.OK.value());
+        return createResponse;
     }
 
     @GetMapping("/planter")
     public ResponseEntity<List<Planter>> getAllPlanters() {
-        try {
-            List<Planter> planters = planterService.getAllPlanters();
-            return ResponseEntity.ok(planters);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        List<Planter> planters = planterService.getAllPlanters();
+        return new ResponseEntity<>(planters, HttpStatus.OK);
     }
 
     @GetMapping("/planter/{id}")
     public ResponseEntity<Object> getPlanterById(@PathVariable int id) {
-        Optional<Planter> planter = Optional.ofNullable(planterService.getPlanter(id));
-        if (planter.isPresent()) {
-            return ResponseEntity.ok(planter.get());
-        } else {
-            CreateResponse response = new CreateResponse("Planter not found", HttpStatus.NOT_FOUND.value());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-        }
+        Planter planter = planterService.getPlanter(id);
+        return new ResponseEntity<>(planter, HttpStatus.OK);
     }
 
     @DeleteMapping("/planter/{id}")
-    public ResponseEntity<CreateResponse> deletePlanterById(@PathVariable int id) {
-        try {
-            String result = planterService.deletePlanter(id);
-            CreateResponse response = new CreateResponse(result, HttpStatus.OK.value());
-            return ResponseEntity.ok(response);
-        } catch (PlanterValidation e) {
-            HttpStatus status;
-            if (e.getMessage().equals("Planter not found")) {
-                status = HttpStatus.NOT_FOUND;
-            } else {
-                status = HttpStatus.INTERNAL_SERVER_ERROR;
-            }
-            CreateResponse response = new CreateResponse(e.getMessage(), status.value());
-            return ResponseEntity.status(status).body(response);
-        }
+    public CreateResponse deletePlanterById(@PathVariable int id) {
+        String result = plantService.deletePlant(id);
+        CreateResponse createResponse = new CreateResponse(result, HttpStatus.OK.value());
+        return createResponse;
     }
 
-    @PostMapping("/seed")
-    public ResponseEntity<CreateResponse> createSeed(@RequestBody Seed seed) {
-        try {
-            String result = seedService.createSeed(seed);
-            HttpStatus httpStatus = HttpStatus.CREATED;
 
-            CreateResponse response = new CreateResponse(result, httpStatus.value());
-            return ResponseEntity.status(httpStatus).body(response);
-        } catch (SeedValidation e) {
-            HttpStatus status;
-            if (e.getMessage().equals("Seed with the same name already exists")) {
-                status = HttpStatus.CONFLICT;
-            } else if (e.getMessage().equals("Name, Type are Mandatory")) {
-                status = HttpStatus.BAD_REQUEST;
-            } else {
-                status = HttpStatus.INTERNAL_SERVER_ERROR;
-            }
-            CreateResponse response = new CreateResponse(e.getMessage(), status.value());
-            return ResponseEntity.status(status).body(response);
-        }
+
+
+    @PostMapping("/seed")
+    public CreateResponse createSeed(@RequestBody Seed seed) {
+        String response = seedService.createSeed(seed);
+        CreateResponse createResponse = new CreateResponse(response, HttpStatus.OK.value());
+        return createResponse;
     }
 
     @PutMapping("/seed/{id}")
-    public ResponseEntity<CreateResponse> updateSeed(@PathVariable int id, @RequestBody Seed seed) {
-        try {
-            String result = seedService.updateSeed(id, seed);
-            HttpStatus httpStatus = HttpStatus.OK;
-
-            CreateResponse response = new CreateResponse(result, httpStatus.value());
-            return ResponseEntity.status(httpStatus).body(response);
-        } catch (SeedValidation e) {
-            HttpStatus status;
-            if (e.getMessage().equals("Seed with the same name already exists")) {
-                status = HttpStatus.CONFLICT;
-            } else if (e.getMessage().equals("Name, Type are Mandatory") ) {
-                status = HttpStatus.BAD_REQUEST;
-            } else if (e.getMessage().equals("Seed not found")){
-                status = HttpStatus.NOT_FOUND;
-            } else {
-                status = HttpStatus.INTERNAL_SERVER_ERROR;
-            }
-            CreateResponse response = new CreateResponse(e.getMessage(), status.value());
-            return ResponseEntity.status(status).body(response);
-        }
+    public CreateResponse updateSeed(@PathVariable int id, @RequestBody Seed seed) {
+        String response = seedService.updateSeed(id, seed);
+        CreateResponse createResponse = new CreateResponse(response, HttpStatus.OK.value());
+        return createResponse;
     }
 
     @GetMapping("/seed")
     public ResponseEntity<List<Seed>> getAllSeeds() {
-        try {
-            List<Seed> seeds = seedService.getAllSeeds();
-            return ResponseEntity.ok(seeds);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        List<Seed> seeds = seedService.getAllSeeds();
+        return new ResponseEntity<>(seeds, HttpStatus.OK);
     }
 
     @GetMapping("/seed/{id}")
     public ResponseEntity<Object> getSeedById(@PathVariable int id) {
-        Optional<Seed> seed = Optional.ofNullable(seedService.getSeed(id));
-        if (seed.isPresent()) {
-            return ResponseEntity.ok(seed.get());
-        } else {
-            CreateResponse response = new CreateResponse("Seed not found", HttpStatus.NOT_FOUND.value());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-        }
+        Seed seed = seedService.getSeed(id);
+        return new ResponseEntity<>(seed, HttpStatus.OK);
     }
 
     @DeleteMapping("/seed/{id}")
-    public ResponseEntity<CreateResponse> deleteSeedById(@PathVariable int id) {
-        try {
-            String result = seedService.deleteSeed(id);
-            CreateResponse response = new CreateResponse(result, HttpStatus.OK.value());
-            return ResponseEntity.ok(response);
-        } catch (SeedValidation e) {
-            HttpStatus status;
-            if (e.getMessage().equals("Seed not found")) {
-                status = HttpStatus.NOT_FOUND;
-            } else {
-                status = HttpStatus.INTERNAL_SERVER_ERROR;
-            }
-            CreateResponse response = new CreateResponse(e.getMessage(), status.value());
-            return ResponseEntity.status(status).body(response);
-        }
+    public CreateResponse deleteSeedById(@PathVariable int id) {
+        String result = seedService.deleteSeed(id);
+        CreateResponse createResponse = new CreateResponse(result, HttpStatus.OK.value());
+        return createResponse;
     }
 
 
     @GetMapping("/products")
     public ResponseEntity<?> getAllProducts() {
-        try {
-            List<Plant> plants = plantService.getAllPlants();
-            List<Planter> planters = planterService.getAllPlanters();
-            List<Seed> seeds = seedService.getAllSeeds();
 
-            CombinedProduct combinedProduct = new CombinedProduct(plants, planters, seeds);
-            log.error("combined");
-            return ResponseEntity.ok(combinedProduct);
-        } catch (Exception e) {
-            log.error("Error retrieving all products", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        List<Plant> plants = plantService.getAllPlants();
+        List<Planter> planters = planterService.getAllPlanters();
+        List<Seed> seeds = seedService.getAllSeeds();
+
+        CombinedProduct combinedProduct = new CombinedProduct(plants, planters, seeds);
+        log.error("combined");
+        return ResponseEntity.ok(combinedProduct);
     }
 
 

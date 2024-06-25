@@ -1,5 +1,7 @@
 package com.techphantomexample.Productmicroservice.service;
 
+import com.techphantomexample.Productmicroservice.exception.PlantValidation;
+import com.techphantomexample.Productmicroservice.exception.SeedValidation;
 import com.techphantomexample.Productmicroservice.model.Seed;
 import com.techphantomexample.Productmicroservice.repository.SeedRepository;
 import org.springframework.stereotype.Service;
@@ -16,74 +18,47 @@ public class SeedService {
     }
 
     public String createSeed(Seed seed) {
-        try {
-            SeedValidation.validateSeed(seed, seedRepository);
-            seedRepository.save(seed);
-            return "Seed Created Successfully";
-        } catch (SeedValidation e) {
-            throw e;
-        } catch (Exception e) {
-            throw new SeedValidation("Error creating seed", e);
+        if (seedRepository.existsByName(seed.getName())) {
+            throw new SeedValidation("Seed already exists");
         }
+        SeedValidation.validateSeed(seed, seedRepository);
+        seedRepository.save(seed);
+        return "Seed Created Successfully";
+
     }
 
     public String updateSeed(int id, Seed newSeedDetails) {
-        try {
-            if (!seedRepository.existsById(id)) {
-                throw new SeedValidation("Seed not found");
-            }
-
-            Seed existingSeed = seedRepository.findById(id).get();
-
-
-            SeedValidation.validateUpdateSeed(newSeedDetails);
-
-
-            existingSeed.setName(newSeedDetails.getName());
-            existingSeed.setDescription(newSeedDetails.getDescription());
-            existingSeed.setPrice(newSeedDetails.getPrice());
-            existingSeed.setCategory(newSeedDetails.getCategory());
-            existingSeed.setQuantity(newSeedDetails.getQuantity());
-
-            seedRepository.save(existingSeed);
-            return "Seed Updated Successfully";
-        } catch (SeedValidation e) {
-            throw e;
-        } catch (Exception e) {
-            throw new SeedValidation("Error updating seed", e);
+        if (!seedRepository.existsById(id)) {
+            throw new SeedValidation("Seed not found");
         }
+        Seed existingSeed = seedRepository.findById(id).get();
+        SeedValidation.validateUpdateSeed(newSeedDetails);
+        existingSeed.setName(newSeedDetails.getName());
+        existingSeed.setDescription(newSeedDetails.getDescription());
+        existingSeed.setPrice(newSeedDetails.getPrice());
+        existingSeed.setCategory(newSeedDetails.getCategory());
+        existingSeed.setQuantity(newSeedDetails.getQuantity());
+
+        seedRepository.save(existingSeed);
+        return "Seed Updated Successfully";
     }
 
     public String deleteSeed(int seedId) {
-        try {
-            if (!seedRepository.existsById(seedId)) {
-                throw new SeedValidation("Seed not found");
-            }
-            seedRepository.deleteById(seedId);
-            return "Seed Deleted Successfully";
-        } catch (SeedValidation e) {
-            throw e;
-        } catch (Exception e) {
-            throw new SeedValidation("Error deleting seed", e);
+        if (!seedRepository.existsById(seedId)) {
+            throw new SeedValidation("Seed not found");
         }
+        seedRepository.deleteById(seedId);
+        return "Seed Deleted Successfully";
     }
 
     public Seed getSeed(int seedId) {
-        try {
-            if (!seedRepository.existsById(seedId)) {
-                return null;
-            }
-            return seedRepository.findById(seedId).get();
-        } catch (Exception e) {
-            throw new SeedValidation("Error retrieving seed", e);
+        if (!seedRepository.existsById(seedId)) {
+            throw  new SeedValidation("Seed not found");
         }
+        return seedRepository.findById(seedId).get();
     }
 
     public List<Seed> getAllSeeds() {
-        try {
-            return seedRepository.findAll();
-        } catch (Exception e) {
-            throw new SeedValidation("Error retrieving seeds", e);
-        }
+        return seedRepository.findAll();
     }
 }

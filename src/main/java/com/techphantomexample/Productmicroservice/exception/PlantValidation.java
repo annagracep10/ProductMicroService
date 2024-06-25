@@ -1,4 +1,4 @@
-package com.techphantomexample.Productmicroservice.service;
+package com.techphantomexample.Productmicroservice.exception;
 
 import com.techphantomexample.Productmicroservice.model.Plant;
 import com.techphantomexample.Productmicroservice.repository.PlantRepository;
@@ -25,25 +25,10 @@ public class PlantValidation extends RuntimeException{
         }
 
 
-        if (existsByPlantName(plant.getName(),plantRepository)) {
-            throw new PlantValidation("Plant with same name already exists");
-        }
-
-    }
-
-    public static void validateUpdatePlant(Plant plant){
-
-        if(isNullOrEmpty(plant.getName())||isNullOrEmpty(plant.getTypeOfPlant())){
-            throw new PlantValidation("Name, Type of Plant are Mandatory");
-        }
-
     }
 
     private static boolean isNullOrEmpty(String str) {
         return str == null || str.trim().isEmpty();
     }
 
-    private static boolean existsByPlantName(String name , PlantRepository plantRepository){
-        return plantRepository.existsByName(name);
-    }
 }
