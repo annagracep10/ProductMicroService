@@ -67,10 +67,6 @@ public class ProductController {
         return createresponse;
     }
 
-
-
-
-
     @PostMapping("/planter")
     public CreateResponse createPlanter(@RequestBody Planter planter) {
         String response = planterService.createPlanter(planter);
