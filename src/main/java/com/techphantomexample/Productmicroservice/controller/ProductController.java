@@ -1,8 +1,5 @@
 package com.techphantomexample.Productmicroservice.controller;
 
-import com.techphantomexample.Productmicroservice.exception.PlantValidation;
-import com.techphantomexample.Productmicroservice.exception.PlanterValidation;
-import com.techphantomexample.Productmicroservice.exception.SeedValidation;
 import com.techphantomexample.Productmicroservice.model.*;
 import com.techphantomexample.Productmicroservice.service.*;
 import org.slf4j.Logger;
@@ -13,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/product")

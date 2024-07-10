@@ -1,7 +1,8 @@
 package com.techphantomexample.Productmicroservice.service;
 
-import com.techphantomexample.Productmicroservice.exception.PlantValidation;
-import com.techphantomexample.Productmicroservice.exception.PlanterValidation;
+import com.techphantomexample.Productmicroservice.exception.PlantException;
+import com.techphantomexample.Productmicroservice.exception.PlanterException;
+import com.techphantomexample.Productmicroservice.validators.PlanterValidation;
 import com.techphantomexample.Productmicroservice.model.Planter;
 import com.techphantomexample.Productmicroservice.repository.PlanterRepository;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,7 @@ public class PlanterService {
 
     public String createPlanter(Planter planter) {
         if (planterRepository.existsByName(planter.getName())) {
-            throw new PlantValidation("Planter already exists");
+            throw new PlanterException("Planter already exists");
         }
         PlanterValidation.validatePlanter(planter, planterRepository);
         planterRepository.save(planter);
@@ -29,7 +30,7 @@ public class PlanterService {
 
     public String updatePlanter(int id, Planter newPlanterDetails) {
         if (!planterRepository.existsById(id)) {
-            throw new PlanterValidation("Planter not found");
+            throw new PlanterException("Planter not found");
         }
         Planter existingPlanter = planterRepository.findById(id).get();
         PlanterValidation.validatePlanter(newPlanterDetails,planterRepository);
@@ -48,7 +49,7 @@ public class PlanterService {
 
     public String deletePlanter(int planterId) {
         if (!planterRepository.existsById(planterId)) {
-            throw new PlanterValidation("Planter not found");
+            throw new PlanterException("Planter not found");
         }
         planterRepository.deleteById(planterId);
         return "Planter Deleted Successfully";
@@ -56,7 +57,7 @@ public class PlanterService {
 
     public Planter getPlanter(int planterId) {
         if (!planterRepository.existsById(planterId)) {
-            throw  new PlanterValidation("Planter not found");
+            throw  new PlanterException("Planter not found");
         }
         return planterRepository.findById(planterId).get();
     }

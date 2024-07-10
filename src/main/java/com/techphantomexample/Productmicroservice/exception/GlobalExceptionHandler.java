@@ -10,20 +10,20 @@ import org.springframework.web.context.request.WebRequest;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(PlantValidation.class)
-    public ResponseEntity<CreateResponse> handleUserOperationException(PlantValidation ex) {
+    @ExceptionHandler(PlantException.class)
+    public ResponseEntity<CreateResponse> handleUserOperationException(PlantException ex) {
         CreateResponse createResponse = new CreateResponse(ex.getMessage(), HttpStatus.BAD_REQUEST.value());
         return new ResponseEntity<CreateResponse>(createResponse, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(PlanterValidation.class)
-    public ResponseEntity<CreateResponse> handleUserOperationException(PlanterValidation ex) {
+    @ExceptionHandler(PlanterException.class)
+    public ResponseEntity<CreateResponse> handleUserOperationException(PlanterException ex) {
         CreateResponse createResponse = new CreateResponse(ex.getMessage(), HttpStatus.BAD_REQUEST.value());
         return new ResponseEntity<CreateResponse>(createResponse, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(SeedValidation.class)
-    public ResponseEntity<CreateResponse> handleUserOperationException(SeedValidation ex) {
+    @ExceptionHandler(SeedException.class)
+    public ResponseEntity<CreateResponse> handleUserOperationException(SeedException ex) {
         CreateResponse createResponse = new CreateResponse(ex.getMessage(), HttpStatus.BAD_REQUEST.value());
         return new ResponseEntity<CreateResponse>(createResponse, HttpStatus.BAD_REQUEST);
     }

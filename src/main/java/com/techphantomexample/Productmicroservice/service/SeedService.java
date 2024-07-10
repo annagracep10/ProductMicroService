@@ -1,9 +1,9 @@
 package com.techphantomexample.Productmicroservice.service;
 
-import com.techphantomexample.Productmicroservice.exception.PlantValidation;
-import com.techphantomexample.Productmicroservice.exception.SeedValidation;
+import com.techphantomexample.Productmicroservice.exception.SeedException;
 import com.techphantomexample.Productmicroservice.model.Seed;
 import com.techphantomexample.Productmicroservice.repository.SeedRepository;
+import com.techphantomexample.Productmicroservice.validators.SeedValidation;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,7 +19,7 @@ public class SeedService {
 
     public String createSeed(Seed seed) {
         if (seedRepository.existsByName(seed.getName())) {
-            throw new SeedValidation("Seed already exists");
+            throw new SeedException("Seed already exists");
         }
         SeedValidation.validateSeed(seed, seedRepository);
         seedRepository.save(seed);
@@ -29,10 +29,10 @@ public class SeedService {
 
     public String updateSeed(int id, Seed newSeedDetails) {
         if (!seedRepository.existsById(id)) {
-            throw new SeedValidation("Seed not found");
+            throw new SeedException("Seed not found");
         }
         Seed existingSeed = seedRepository.findById(id).get();
-        SeedValidation.validateUpdateSeed(newSeedDetails);
+        SeedValidation.validateSeed(newSeedDetails,seedRepository);
         existingSeed.setName(newSeedDetails.getName());
         existingSeed.setDescription(newSeedDetails.getDescription());
         existingSeed.setPrice(newSeedDetails.getPrice());
@@ -45,7 +45,7 @@ public class SeedService {
 
     public String deleteSeed(int seedId) {
         if (!seedRepository.existsById(seedId)) {
-            throw new SeedValidation("Seed not found");
+            throw new SeedException("Seed not found");
         }
         seedRepository.deleteById(seedId);
         return "Seed Deleted Successfully";
@@ -53,7 +53,7 @@ public class SeedService {
 
     public Seed getSeed(int seedId) {
         if (!seedRepository.existsById(seedId)) {
-            throw  new SeedValidation("Seed not found");
+            throw  new SeedException("Seed not found");
         }
         return seedRepository.findById(seedId).get();
     }
