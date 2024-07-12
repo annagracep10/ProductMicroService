@@ -3,7 +3,6 @@ package com.techphantomexample.Productmicroservice.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
