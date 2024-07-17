@@ -91,7 +91,7 @@ public class ProductController {
 
     @DeleteMapping("/planter/{id}")
     public CreateResponse deletePlanterById(@PathVariable int id) {
-        String result = plantService.deletePlant(id);
+        String result = planterService.deletePlanter(id);
         CreateResponse createResponse = new CreateResponse(result, HttpStatus.OK.value());
         return createResponse;
     }
