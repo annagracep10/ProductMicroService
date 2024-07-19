@@ -5,19 +5,20 @@ import com.techphantomexample.Productmicroservice.model.Plant;
 import com.techphantomexample.Productmicroservice.repository.PlantRepository;
 import com.techphantomexample.Productmicroservice.validators.PlantValidation;
 import com.techphantomexample.Productmicroservice.validators.PlanterValidation;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@AllArgsConstructor
+@NoArgsConstructor
 public class PlantService {
 
+    @Autowired
     PlantRepository plantRepository;
-
-
-    public PlantService(PlantRepository plantRepository) {
-        this.plantRepository = plantRepository;
-    }
 
     public String createPlant(Plant plant) {
         if (plantRepository.existsByName(plant.getName())) {
@@ -66,6 +67,12 @@ public class PlantService {
     public List<Plant> getAllPlants() {
         return plantRepository.findAll();
 
+    }
+
+    public void updatePlantQuantity(int plantId, int quantityToSubtract) {
+        Plant plant = getPlant(plantId);
+        plant.setQuantity(plant.getQuantity() - quantityToSubtract);
+        plantRepository.save(plant);
     }
 
 }

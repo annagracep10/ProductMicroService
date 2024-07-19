@@ -1,33 +1,45 @@
 package com.techphantomexample.Productmicroservice.controller;
 
 import com.techphantomexample.Productmicroservice.model.*;
+import com.techphantomexample.Productmicroservice.repository.PlantRepository;
+import com.techphantomexample.Productmicroservice.repository.PlanterRepository;
+import com.techphantomexample.Productmicroservice.repository.SeedRepository;
 import com.techphantomexample.Productmicroservice.service.*;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
+import java.util.Map;
 
+@AllArgsConstructor
+@NoArgsConstructor
 @RestController
 @RequestMapping("/product")
 public class ProductController {
 
     private static final Logger log = LoggerFactory.getLogger(ProductController.class);
 
+    @Autowired
     PlantService plantService;
+    @Autowired
     PlanterService planterService;
+    @Autowired
     SeedService seedService;
+    @Autowired
     RestTemplate restTemplate;
-
-    public ProductController(PlantService plantService, PlanterService planterService, SeedService seedService, RestTemplate restTemplate) {
-        this.plantService = plantService;
-        this.planterService = planterService;
-        this.seedService = seedService;
-        this.restTemplate = restTemplate;
-    }
+    @Autowired
+    PlantRepository plantRepository;
+    @Autowired
+    PlanterRepository planterRepository;
+    @Autowired
+    SeedRepository seedRepository;
 
 
     @PostMapping("/plant")
@@ -51,7 +63,7 @@ public class ProductController {
     }
 
     @GetMapping("/plant/{id}")
-    public ResponseEntity<?> getPlantById(@PathVariable int id) {
+    public ResponseEntity<Plant> getPlantById(@PathVariable int id) {
         Plant plant = plantService.getPlant(id);
         return new ResponseEntity<>(plant, HttpStatus.OK);
     }
@@ -84,7 +96,7 @@ public class ProductController {
     }
 
     @GetMapping("/planter/{id}")
-    public ResponseEntity<Object> getPlanterById(@PathVariable int id) {
+    public ResponseEntity<Planter> getPlanterById(@PathVariable int id) {
         Planter planter = planterService.getPlanter(id);
         return new ResponseEntity<>(planter, HttpStatus.OK);
     }
@@ -95,9 +107,6 @@ public class ProductController {
         CreateResponse createResponse = new CreateResponse(result, HttpStatus.OK.value());
         return createResponse;
     }
-
-
-
 
     @PostMapping("/seed")
     public CreateResponse createSeed(@RequestBody Seed seed) {
@@ -120,7 +129,7 @@ public class ProductController {
     }
 
     @GetMapping("/seed/{id}")
-    public ResponseEntity<Object> getSeedById(@PathVariable int id) {
+    public ResponseEntity<Seed> getSeedById(@PathVariable int id) {
         Seed seed = seedService.getSeed(id);
         return new ResponseEntity<>(seed, HttpStatus.OK);
     }
@@ -145,5 +154,25 @@ public class ProductController {
         return ResponseEntity.ok(combinedProduct);
     }
 
+    @PutMapping("/{productType}/{productId}/quantity")
+    public ResponseEntity<?> updateQuantity(@PathVariable String productType, @PathVariable int productId, @RequestBody Map<String, Integer> quantityUpdate) {
+        int quantityToSubtract = quantityUpdate.get("quantityToSubtract");
+
+        switch (productType) {
+            case "plant":
+                plantService.updatePlantQuantity(productId, quantityToSubtract);
+                break;
+            case "planter":
+                planterService.updatePlanterQuantity(productId, quantityToSubtract);
+                break;
+            case "seed":
+                seedService.updateSeedQuantity(productId, quantityToSubtract);
+                break;
+            default:
+                return new ResponseEntity<>("Product Type Unavailable", HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>("Quantity updated successfully", HttpStatus.OK);
+    }
 
 }

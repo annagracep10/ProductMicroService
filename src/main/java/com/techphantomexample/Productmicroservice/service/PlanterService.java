@@ -5,6 +5,7 @@ import com.techphantomexample.Productmicroservice.exception.PlanterException;
 import com.techphantomexample.Productmicroservice.validators.PlanterValidation;
 import com.techphantomexample.Productmicroservice.model.Planter;
 import com.techphantomexample.Productmicroservice.repository.PlanterRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,7 +13,8 @@ import java.util.List;
 @Service
 public class PlanterService {
 
-    private final PlanterRepository planterRepository;
+    @Autowired
+    PlanterRepository planterRepository;
 
     public PlanterService(PlanterRepository planterRepository) {
         this.planterRepository = planterRepository;
@@ -65,5 +67,11 @@ public class PlanterService {
     public List<Planter> getAllPlanters() {
         return planterRepository.findAll();
 
+    }
+
+    public void updatePlanterQuantity(int productId, int quantityToSubtract) {
+        Planter planter = getPlanter(productId);
+        planter.setQuantity(planter.getQuantity() - quantityToSubtract);
+        planterRepository.save(planter);
     }
 }

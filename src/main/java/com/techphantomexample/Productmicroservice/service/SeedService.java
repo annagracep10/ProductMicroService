@@ -4,6 +4,7 @@ import com.techphantomexample.Productmicroservice.exception.SeedException;
 import com.techphantomexample.Productmicroservice.model.Seed;
 import com.techphantomexample.Productmicroservice.repository.SeedRepository;
 import com.techphantomexample.Productmicroservice.validators.SeedValidation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,7 +12,8 @@ import java.util.List;
 @Service
 public class SeedService {
 
-    private final SeedRepository seedRepository;
+    @Autowired
+    SeedRepository seedRepository;
 
     public SeedService(SeedRepository seedRepository) {
         this.seedRepository = seedRepository;
@@ -60,5 +62,11 @@ public class SeedService {
 
     public List<Seed> getAllSeeds() {
         return seedRepository.findAll();
+    }
+
+    public void updateSeedQuantity(int productId, int quantityToSubtract) {
+        Seed seed = getSeed(productId);
+        seed.setQuantity(seed.getQuantity() - quantityToSubtract);
+        seedRepository.save(seed);
     }
 }
