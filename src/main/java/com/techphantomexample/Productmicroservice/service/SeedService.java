@@ -66,7 +66,7 @@ public class SeedService {
 
     public void updateSeedQuantity(int productId, int quantityToSubtract) {
         Seed seed = getSeed(productId);
-        seed.setQuantity(seed.getQuantity() - quantityToSubtract);
+        seed.setQuantity(seed.getQuantity() + quantityToSubtract); // Add or subtract based on the sign of quantityToSubtract
         seedRepository.save(seed);
     }
 }

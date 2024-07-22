@@ -71,7 +71,7 @@ public class PlanterService {
 
     public void updatePlanterQuantity(int productId, int quantityToSubtract) {
         Planter planter = getPlanter(productId);
-        planter.setQuantity(planter.getQuantity() - quantityToSubtract);
+        planter.setQuantity(planter.getQuantity() + quantityToSubtract); // Add or subtract based on the sign of quantityToSubtract
         planterRepository.save(planter);
     }
 }
