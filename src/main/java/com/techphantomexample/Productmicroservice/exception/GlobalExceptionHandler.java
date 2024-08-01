@@ -11,21 +11,18 @@ import org.springframework.web.context.request.WebRequest;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(PlantException.class)
-    public ResponseEntity<CreateResponse> handleUserOperationException(PlantException ex) {
-        CreateResponse createResponse = new CreateResponse(ex.getMessage(), HttpStatus.BAD_REQUEST.value());
-        return new ResponseEntity<CreateResponse>(createResponse, HttpStatus.BAD_REQUEST);
+    public ResponseEntity<?> handleUserOperationException(PlantException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(PlanterException.class)
-    public ResponseEntity<CreateResponse> handleUserOperationException(PlanterException ex) {
-        CreateResponse createResponse = new CreateResponse(ex.getMessage(), HttpStatus.BAD_REQUEST.value());
-        return new ResponseEntity<CreateResponse>(createResponse, HttpStatus.BAD_REQUEST);
+    public ResponseEntity<?> handleUserOperationException(PlanterException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(SeedException.class)
-    public ResponseEntity<CreateResponse> handleUserOperationException(SeedException ex) {
-        CreateResponse createResponse = new CreateResponse(ex.getMessage(), HttpStatus.BAD_REQUEST.value());
-        return new ResponseEntity<CreateResponse>(createResponse, HttpStatus.BAD_REQUEST);
+    public ResponseEntity<?> handleUserOperationException(SeedException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(Exception.class)
