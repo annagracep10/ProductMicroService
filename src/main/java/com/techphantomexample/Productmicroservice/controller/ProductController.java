@@ -1,5 +1,11 @@
 package com.techphantomexample.Productmicroservice.controller;
 
+import com.techphantomexample.Productmicroservice.dto.PlantDto;
+import com.techphantomexample.Productmicroservice.dto.PlanterDto;
+import com.techphantomexample.Productmicroservice.dto.SeedDto;
+import com.techphantomexample.Productmicroservice.exception.PlantException;
+import com.techphantomexample.Productmicroservice.exception.PlanterException;
+import com.techphantomexample.Productmicroservice.exception.SeedException;
 import com.techphantomexample.Productmicroservice.model.*;
 import com.techphantomexample.Productmicroservice.repository.PlantRepository;
 import com.techphantomexample.Productmicroservice.repository.PlanterRepository;
@@ -14,7 +20,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -43,14 +51,14 @@ public class ProductController {
 
 
     @PostMapping("/plant")
-    public CreateResponse createProduct(@RequestBody Plant plant) {
+    public CreateResponse createProduct(@RequestBody PlantDto plant) {
         String response = plantService.createPlant(plant);
         CreateResponse createResponse = new CreateResponse(response, HttpStatus.OK.value());
         return createResponse;
     }
 
     @PutMapping("/plant/{id}")
-    public CreateResponse updatePlant(@PathVariable int id, @RequestBody Plant plant) {
+    public CreateResponse updatePlant(@PathVariable int id, @RequestBody PlantDto plant) {
         String response = plantService.updatePlant(id, plant);
         CreateResponse createResponse = new CreateResponse(response, HttpStatus.OK.value());
         return createResponse;
@@ -76,14 +84,14 @@ public class ProductController {
     }
 
     @PostMapping("/planter")
-    public CreateResponse createPlanter(@RequestBody Planter planter) {
+    public CreateResponse createPlanter(@RequestBody PlanterDto planter) {
         String response = planterService.createPlanter(planter);
         CreateResponse createResponse = new CreateResponse(response, HttpStatus.OK.value());
         return createResponse;
     }
 
     @PutMapping("/planter/{id}")
-    public CreateResponse updatePlanter(@PathVariable int id, @RequestBody Planter planter) {
+    public CreateResponse updatePlanter(@PathVariable int id, @RequestBody PlanterDto planter) {
         String response = planterService.updatePlanter(id, planter);
         CreateResponse createResponse = new CreateResponse(response, HttpStatus.OK.value());
         return createResponse;
@@ -109,14 +117,14 @@ public class ProductController {
     }
 
     @PostMapping("/seed")
-    public CreateResponse createSeed(@RequestBody Seed seed) {
+    public CreateResponse createSeed(@RequestBody SeedDto seed) {
         String response = seedService.createSeed(seed);
         CreateResponse createResponse = new CreateResponse(response, HttpStatus.OK.value());
         return createResponse;
     }
 
     @PutMapping("/seed/{id}")
-    public CreateResponse updateSeed(@PathVariable int id, @RequestBody Seed seed) {
+    public CreateResponse updateSeed(@PathVariable int id, @RequestBody SeedDto seed) {
         String response = seedService.updateSeed(id, seed);
         CreateResponse createResponse = new CreateResponse(response, HttpStatus.OK.value());
         return createResponse;
@@ -174,5 +182,46 @@ public class ProductController {
 
         return new ResponseEntity<>("Quantity updated successfully", HttpStatus.OK);
     }
+
+    @PostMapping("/upload")
+    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file,
+                                             @RequestParam("productId") int productId,
+                                             @RequestParam("productType") String productType) {
+        try {
+            if (file == null || file.isEmpty()) {
+                return ResponseEntity.badRequest().body("File is null or empty");
+            }
+
+            byte[] fileBytes = file.getBytes();
+
+            switch (productType.toLowerCase()) {
+                case "plant":
+                    Plant plant = plantRepository.findById(productId)
+                            .orElseThrow(() -> new PlantException("Plant not found"));
+                    plant.setImage(fileBytes);
+                    plantRepository.save(plant);
+                    break;
+                case "planter":
+                    Planter planter = planterRepository.findById(productId)
+                            .orElseThrow(() -> new PlanterException("Planter not found"));
+                    planter.setImage(fileBytes);
+                    planterRepository.save(planter);
+                    break;
+                case "seed":
+                    Seed seed = seedRepository.findById(productId)
+                            .orElseThrow(() -> new SeedException("Seed not found"));
+                    seed.setImage(fileBytes);
+                    seedRepository.save(seed);
+                    break;
+                default:
+                    return ResponseEntity.badRequest().body("Invalid product type");
+            }
+            return ResponseEntity.ok("File uploaded successfully!");
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error processing file: " + e.getMessage());
+        }
+    }
+
+
 
 }

@@ -1,5 +1,6 @@
 package com.techphantomexample.Productmicroservice.service;
 
+import com.techphantomexample.Productmicroservice.dto.PlantDto;
 import com.techphantomexample.Productmicroservice.exception.PlantException;
 import com.techphantomexample.Productmicroservice.model.Plant;
 import com.techphantomexample.Productmicroservice.repository.PlantRepository;
@@ -20,17 +21,29 @@ public class PlantService {
     @Autowired
     PlantRepository plantRepository;
 
-    public String createPlant(Plant plant) {
-        if (plantRepository.existsByName(plant.getName())) {
+    public String createPlant(PlantDto plantdto) {
+
+        if (plantRepository.existsByName(plantdto.getName())) {
             throw new PlantException("Plant already exists");
         }
-        PlantValidation.validatePlant(plant,plantRepository);
+        PlantValidation.validatePlant(plantdto,plantRepository);
+        Plant plant = new Plant();
+        plant.setName(plantdto.getName());
+        plant.setDescription(plantdto.getDescription());
+        plant.setPrice(plantdto.getPrice());
+        plant.setCategory(plantdto.getCategory());
+        plant.setQuantity(plantdto.getQuantity());
+        plant.setImage(null);
+        plant.setTypeOfPlant(plantdto.getTypeOfPlant());
+        plant.setSunlightRequirements(plantdto.getSunlightRequirements());
+        plant.setWateringFrequency(plantdto.getWateringFrequency());
+
         plantRepository.save(plant);
         return "Plant Created successfully";
 
     }
 
-    public String updatePlant(int id, Plant newPlantDetails) {
+    public String updatePlant(int id, PlantDto newPlantDetails) {
         if (!plantRepository.existsById(id)) {
             throw new PlantException("Plant not found");
         }

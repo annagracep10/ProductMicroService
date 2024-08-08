@@ -1,6 +1,6 @@
 package com.techphantomexample.Productmicroservice.service;
 
-import com.techphantomexample.Productmicroservice.exception.PlantException;
+import com.techphantomexample.Productmicroservice.dto.PlanterDto;
 import com.techphantomexample.Productmicroservice.exception.PlanterException;
 import com.techphantomexample.Productmicroservice.validators.PlanterValidation;
 import com.techphantomexample.Productmicroservice.model.Planter;
@@ -20,17 +20,27 @@ public class PlanterService {
         this.planterRepository = planterRepository;
     }
 
-    public String createPlanter(Planter planter) {
-        if (planterRepository.existsByName(planter.getName())) {
+    public String createPlanter(PlanterDto planterdto) {
+        if (planterRepository.existsByName(planterdto.getName())) {
             throw new PlanterException("Planter already exists");
         }
-        PlanterValidation.validatePlanter(planter, planterRepository);
+        PlanterValidation.validatePlanter(planterdto, planterRepository);
+        Planter planter = new Planter();
+        planter.setName(planterdto.getName());
+        planter.setDescription(planterdto.getDescription());
+        planter.setPrice(planterdto.getPrice());
+        planter.setCategory(planterdto.getCategory());
+        planter.setImage(null);
+        planter.setQuantity(planterdto.getQuantity());
+        planter.setMaterial(planterdto.getMaterial());
+        planter.setDimensions(planterdto.getDimensions());
+        planter.setColor(planterdto.getColor());
         planterRepository.save(planter);
         return "Planter Created Successfully";
 
     }
 
-    public String updatePlanter(int id, Planter newPlanterDetails) {
+    public String updatePlanter(int id, PlanterDto newPlanterDetails) {
         if (!planterRepository.existsById(id)) {
             throw new PlanterException("Planter not found");
         }

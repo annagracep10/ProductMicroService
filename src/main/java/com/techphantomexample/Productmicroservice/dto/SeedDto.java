@@ -1,21 +1,20 @@
-package com.techphantomexample.Productmicroservice.model;
+package com.techphantomexample.Productmicroservice.dto;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-@EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-@Table(name = "seeds_info")
-public class Seed extends BaseProduct {
-
+public class SeedDto {
+    private String name;
+    private String description;
+    private double price;
+    private String category;
+    private int quantity;
     private String seedType;
     private int germinationTime;
     private String season;
 }
-

@@ -1,5 +1,6 @@
 package com.techphantomexample.Productmicroservice.service;
 
+import com.techphantomexample.Productmicroservice.dto.SeedDto;
 import com.techphantomexample.Productmicroservice.exception.SeedException;
 import com.techphantomexample.Productmicroservice.model.Seed;
 import com.techphantomexample.Productmicroservice.repository.SeedRepository;
@@ -19,17 +20,27 @@ public class SeedService {
         this.seedRepository = seedRepository;
     }
 
-    public String createSeed(Seed seed) {
-        if (seedRepository.existsByName(seed.getName())) {
+    public String createSeed(SeedDto seedDto) {
+        if (seedRepository.existsByName(seedDto.getName())) {
             throw new SeedException("Seed already exists");
         }
-        SeedValidation.validateSeed(seed, seedRepository);
+        SeedValidation.validateSeed(seedDto, seedRepository);
+        Seed seed = new Seed();
+        seed.setName(seedDto.getName());
+        seed.setDescription(seedDto.getDescription());
+        seed.setPrice(seedDto.getPrice());
+        seed.setCategory(seedDto.getCategory());
+        seed.setImage(null);
+        seed.setQuantity(seedDto.getQuantity());
+        seed.setSeedType(seedDto.getSeedType());
+        seed.setGerminationTime(seedDto.getGerminationTime());
+        seed.setSeason(seedDto.getSeason());
         seedRepository.save(seed);
         return "Seed Created Successfully";
 
     }
 
-    public String updateSeed(int id, Seed newSeedDetails) {
+    public String updateSeed(int id, SeedDto newSeedDetails) {
         if (!seedRepository.existsById(id)) {
             throw new SeedException("Seed not found");
         }
@@ -40,6 +51,9 @@ public class SeedService {
         existingSeed.setPrice(newSeedDetails.getPrice());
         existingSeed.setCategory(newSeedDetails.getCategory());
         existingSeed.setQuantity(newSeedDetails.getQuantity());
+        existingSeed.setSeedType(newSeedDetails.getSeedType());
+        existingSeed.setGerminationTime(newSeedDetails.getGerminationTime());
+        existingSeed.setSeason(newSeedDetails.getSeason());
 
         seedRepository.save(existingSeed);
         return "Seed Updated Successfully";
@@ -66,7 +80,7 @@ public class SeedService {
 
     public void updateSeedQuantity(int productId, int quantityToSubtract) {
         Seed seed = getSeed(productId);
-        seed.setQuantity(seed.getQuantity() + quantityToSubtract); // Add or subtract based on the sign of quantityToSubtract
+        seed.setQuantity(seed.getQuantity() + quantityToSubtract);
         seedRepository.save(seed);
     }
 }

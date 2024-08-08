@@ -1,21 +1,20 @@
-package com.techphantomexample.Productmicroservice.model;
+package com.techphantomexample.Productmicroservice.dto;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-@EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-@Table(name="planter_info")
-public class Planter extends BaseProduct {
-
+public class PlanterDto  {
+    private String name;
+    private String description;
+    private double price;
+    private String category;
+    private int quantity;
     private String material;
     private String dimensions;
     private String color;
-
 }

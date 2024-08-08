@@ -23,4 +23,8 @@ public abstract class  BaseProduct {
     private String category;
     private int quantity;
 
+    @Lob
+    @Column(columnDefinition="LONGBLOB")
+    private byte[] image;
+
 }
