@@ -184,33 +184,33 @@ public class ProductController {
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file,
-                                             @RequestParam("productId") int productId,
-                                             @RequestParam("productType") String productType) {
+    public ResponseEntity<String> uploadFile(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("productId") int productId,
+            @RequestParam("productType") String productType) {
+
+        if (file.isEmpty()) {
+            return ResponseEntity.badRequest().body("File is empty");
+        }
+
         try {
-            if (file == null || file.isEmpty()) {
-                return ResponseEntity.badRequest().body("File is null or empty");
-            }
-
-            byte[] fileBytes = file.getBytes();
-
             switch (productType.toLowerCase()) {
                 case "plant":
                     Plant plant = plantRepository.findById(productId)
                             .orElseThrow(() -> new PlantException("Plant not found"));
-                    plant.setImage(fileBytes);
+                    plant.setImage(file.getBytes());
                     plantRepository.save(plant);
                     break;
                 case "planter":
                     Planter planter = planterRepository.findById(productId)
                             .orElseThrow(() -> new PlanterException("Planter not found"));
-                    planter.setImage(fileBytes);
+                    planter.setImage(file.getBytes());
                     planterRepository.save(planter);
                     break;
                 case "seed":
                     Seed seed = seedRepository.findById(productId)
                             .orElseThrow(() -> new SeedException("Seed not found"));
-                    seed.setImage(fileBytes);
+                    seed.setImage(file.getBytes());
                     seedRepository.save(seed);
                     break;
                 default:
@@ -218,7 +218,8 @@ public class ProductController {
             }
             return ResponseEntity.ok("File uploaded successfully!");
         } catch (Exception e) {
-            return ResponseEntity.status(500).body("Error processing file: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error processing file: " + e.getMessage());
         }
     }
 
