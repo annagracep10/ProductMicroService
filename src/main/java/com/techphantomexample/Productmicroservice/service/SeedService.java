@@ -45,15 +45,30 @@ public class SeedService {
             throw new SeedException("Seed not found");
         }
         Seed existingSeed = seedRepository.findById(id).get();
-        SeedValidation.validateSeed(newSeedDetails,seedRepository);
-        existingSeed.setName(newSeedDetails.getName());
-        existingSeed.setDescription(newSeedDetails.getDescription());
-        existingSeed.setPrice(newSeedDetails.getPrice());
-        existingSeed.setCategory(newSeedDetails.getCategory());
-        existingSeed.setQuantity(newSeedDetails.getQuantity());
-        existingSeed.setSeedType(newSeedDetails.getSeedType());
-        existingSeed.setGerminationTime(newSeedDetails.getGerminationTime());
-        existingSeed.setSeason(newSeedDetails.getSeason());
+        if (newSeedDetails.getName() != null) {
+            existingSeed.setName(newSeedDetails.getName());
+        }
+        if (newSeedDetails.getDescription() != null) {
+            existingSeed.setDescription(newSeedDetails.getDescription());
+        }
+        if (newSeedDetails.getPrice() != 0) {
+            existingSeed.setPrice(newSeedDetails.getPrice());
+        }
+        if (newSeedDetails.getCategory() != null) {
+            existingSeed.setCategory(newSeedDetails.getCategory());
+        }
+        if (newSeedDetails.getQuantity() != 0) {
+            existingSeed.setQuantity(newSeedDetails.getQuantity());
+        }
+        if (newSeedDetails.getSeedType() != null) {
+            existingSeed.setSeedType(newSeedDetails.getSeedType());
+        }
+        if (newSeedDetails.getGerminationTime() != 0) {
+            existingSeed.setGerminationTime(newSeedDetails.getGerminationTime());
+        }
+        if (newSeedDetails.getSeason() != null) {
+            existingSeed.setSeason(newSeedDetails.getSeason());
+        }
 
         seedRepository.save(existingSeed);
         return "Seed Updated Successfully";
