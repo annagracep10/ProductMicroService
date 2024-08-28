@@ -58,10 +58,19 @@ public class ProductController {
     }
 
     @PutMapping("/plant/{id}")
-    public CreateResponse updatePlant(@PathVariable int id, @RequestBody PlantDto plant) {
-        String response = plantService.updatePlant(id, plant);
-        CreateResponse createResponse = new CreateResponse(response, HttpStatus.OK.value());
-        return createResponse;
+    public CreateResponse updatePlant(
+            @PathVariable int id,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String description,
+            @RequestParam(required = false) Double price,
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) Integer quantity,
+            @RequestParam(required = false) String typeOfPlant,
+            @RequestParam(required = false) String sunlightRequirements,
+            @RequestParam(required = false) String wateringFrequency) {
+
+        String response = plantService.updatePlant(id, name, description, price, category, quantity, typeOfPlant, sunlightRequirements, wateringFrequency);
+        return new CreateResponse(response, HttpStatus.OK.value());
     }
 
     @GetMapping("/plant")
@@ -91,11 +100,21 @@ public class ProductController {
     }
 
     @PutMapping("/planter/{id}")
-    public CreateResponse updatePlanter(@PathVariable int id, @RequestBody PlanterDto planter) {
-        String response = planterService.updatePlanter(id, planter);
-        CreateResponse createResponse = new CreateResponse(response, HttpStatus.OK.value());
-        return createResponse;
+    public CreateResponse updatePlanter(
+            @PathVariable int id,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String description,
+            @RequestParam(required = false) Double price,
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) Integer quantity,
+            @RequestParam(required = false) String material,
+            @RequestParam(required = false) String dimensions,
+            @RequestParam(required = false) String color) {
+
+        String response = planterService.updatePlanter(id, name, description, price, category, quantity, material, dimensions, color);
+        return new CreateResponse(response, HttpStatus.OK.value());
     }
+
 
     @GetMapping("/planter")
     public ResponseEntity<List<Planter>> getAllPlanters() {
@@ -124,11 +143,21 @@ public class ProductController {
     }
 
     @PutMapping("/seed/{id}")
-    public CreateResponse updateSeed(@PathVariable int id, @RequestBody SeedDto seed) {
-        String response = seedService.updateSeed(id, seed);
-        CreateResponse createResponse = new CreateResponse(response, HttpStatus.OK.value());
-        return createResponse;
+    public CreateResponse updateSeed(
+            @PathVariable int id,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String description,
+            @RequestParam(required = false) Double price,
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) Integer quantity,
+            @RequestParam(required = false) String seedType,
+            @RequestParam(required = false) Integer germinationTime,
+            @RequestParam(required = false) String season) {
+
+        String response = seedService.updateSeed(id, name, description, price, category, quantity, seedType, germinationTime, season);
+        return new CreateResponse(response, HttpStatus.OK.value());
     }
+
 
     @GetMapping("/seed")
     public ResponseEntity<List<Seed>> getAllSeeds() {
