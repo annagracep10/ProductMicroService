@@ -43,39 +43,25 @@ public class PlantService {
 
     }
 
-    public String updatePlant(int id, PlantDto newPlantDetails) {
+    public String updatePlant(int id, String name, String description, Double price, String category, Integer quantity, String typeOfPlant, String sunlightRequirements, String wateringFrequency) {
         if (!plantRepository.existsById(id)) {
             throw new PlantException("Plant not found");
         }
         Plant existingPlant = plantRepository.findById(id).get();
-        if (newPlantDetails.getName() != null) {
-            existingPlant.setName(newPlantDetails.getName());
-        }
-        if (newPlantDetails.getDescription() != null) {
-            existingPlant.setDescription(newPlantDetails.getDescription());
-        }
-        if (newPlantDetails.getPrice() != 0) {
-            existingPlant.setPrice(newPlantDetails.getPrice());
-        }
-        if (newPlantDetails.getCategory() != null) {
-            existingPlant.setCategory(newPlantDetails.getCategory());
-        }
-        if (newPlantDetails.getQuantity() != 0) {
-            existingPlant.setQuantity(newPlantDetails.getQuantity());
-        }
-        if (newPlantDetails.getTypeOfPlant() != null) {
-            existingPlant.setTypeOfPlant(newPlantDetails.getTypeOfPlant());
-        }
-        if (newPlantDetails.getSunlightRequirements() != null) {
-            existingPlant.setSunlightRequirements(newPlantDetails.getSunlightRequirements());
-        }
-        if (newPlantDetails.getWateringFrequency() != null) {
-            existingPlant.setWateringFrequency(newPlantDetails.getWateringFrequency());
-        }
+
+        if (name != null) existingPlant.setName(name);
+        if (description != null) existingPlant.setDescription(description);
+        if (price != null) existingPlant.setPrice(price);
+        if (category != null) existingPlant.setCategory(category);
+        if (quantity != null) existingPlant.setQuantity(quantity);
+        if (typeOfPlant != null) existingPlant.setTypeOfPlant(typeOfPlant);
+        if (sunlightRequirements != null) existingPlant.setSunlightRequirements(sunlightRequirements);
+        if (wateringFrequency != null) existingPlant.setWateringFrequency(wateringFrequency);
 
         plantRepository.save(existingPlant);
         return "Plant Updated Successfully";
     }
+
 
     public String deletePlant(int plantId) {
         if (!plantRepository.existsById(plantId)) {

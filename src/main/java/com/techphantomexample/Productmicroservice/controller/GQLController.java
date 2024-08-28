@@ -57,8 +57,18 @@ public class GQLController {
     }
 
     @MutationMapping
-    public String updatePlant(@Argument Integer id , @Argument PlantDto plant) {
-        return plantService.updatePlant(id, plant);
+    public String updatePlant(
+            @Argument Integer id,
+            @Argument String name,
+            @Argument String description,
+            @Argument Double price,
+            @Argument String category,
+            @Argument Integer quantity,
+            @Argument String typeOfPlant,
+            @Argument String sunlightRequirements,
+            @Argument String wateringFrequency) {
+
+        return plantService.updatePlant(id, name, description, price, category, quantity, typeOfPlant, sunlightRequirements, wateringFrequency);
     }
 
 }

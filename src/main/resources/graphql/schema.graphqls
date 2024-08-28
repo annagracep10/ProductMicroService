@@ -31,16 +31,6 @@ type Seed{
     germinationTime: Int,
     season: String,
 }
-input PlantInput {
-    name: String
-    description: String
-    price: Float
-    category: String
-    quantity: Int
-    typeOfPlant: String
-    sunlightRequirements: String
-    wateringFrequency: String
-}
 type Query{
     getAllPlants:[Plant]
     getPlantById(id: Int): Plant
@@ -50,5 +40,15 @@ type Query{
     getSeedById(id: Int): Seed
 }
 type Mutation {
-    updatePlant(id: Int, plant: PlantInput): String
+    updatePlant(
+        id: Int,
+        name: String,
+        description: String,
+        price: Float,
+        category: String,
+        quantity: Int,
+        typeOfPlant: String,
+        sunlightRequirements: String,
+        wateringFrequency: String
+    ): String
 }
