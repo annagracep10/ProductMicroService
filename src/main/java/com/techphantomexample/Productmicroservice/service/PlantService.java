@@ -43,20 +43,20 @@ public class PlantService {
 
     }
 
-    public String updatePlant(int id, PlantDto newPlantDetails) {
+    public String updatePlant(int id, String name, String description, Double price, String category, Integer quantity, String typeOfPlant, String sunlightRequirements, String wateringFrequency) {
         if (!plantRepository.existsById(id)) {
             throw new PlantException("Plant not found");
         }
         Plant existingPlant = plantRepository.findById(id).get();
-        PlantValidation.validatePlant(newPlantDetails,plantRepository);
-        existingPlant.setName(newPlantDetails.getName());
-        existingPlant.setDescription(newPlantDetails.getDescription());
-        existingPlant.setPrice(newPlantDetails.getPrice());
-        existingPlant.setCategory(newPlantDetails.getCategory());
-        existingPlant.setQuantity(newPlantDetails.getQuantity());
-        existingPlant.setTypeOfPlant(newPlantDetails.getTypeOfPlant());
-        existingPlant.setSunlightRequirements(newPlantDetails.getSunlightRequirements());
-        existingPlant.setWateringFrequency(newPlantDetails.getWateringFrequency());
+
+        if (name != null) existingPlant.setName(name);
+        if (description != null) existingPlant.setDescription(description);
+        if (price != null) existingPlant.setPrice(price);
+        if (category != null) existingPlant.setCategory(category);
+        if (quantity != null) existingPlant.setQuantity(quantity);
+        if (typeOfPlant != null) existingPlant.setTypeOfPlant(typeOfPlant);
+        if (sunlightRequirements != null) existingPlant.setSunlightRequirements(sunlightRequirements);
+        if (wateringFrequency != null) existingPlant.setWateringFrequency(wateringFrequency);
 
         plantRepository.save(existingPlant);
         return "Plant Updated Successfully";

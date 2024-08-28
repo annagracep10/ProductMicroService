@@ -40,20 +40,20 @@ public class SeedService {
 
     }
 
-    public String updateSeed(int id, SeedDto newSeedDetails) {
+    public String updateSeed(int id, String name, String description, Double price, String category, Integer quantity, String seedType, Integer germinationTime, String season) {
         if (!seedRepository.existsById(id)) {
             throw new SeedException("Seed not found");
         }
         Seed existingSeed = seedRepository.findById(id).get();
-        SeedValidation.validateSeed(newSeedDetails,seedRepository);
-        existingSeed.setName(newSeedDetails.getName());
-        existingSeed.setDescription(newSeedDetails.getDescription());
-        existingSeed.setPrice(newSeedDetails.getPrice());
-        existingSeed.setCategory(newSeedDetails.getCategory());
-        existingSeed.setQuantity(newSeedDetails.getQuantity());
-        existingSeed.setSeedType(newSeedDetails.getSeedType());
-        existingSeed.setGerminationTime(newSeedDetails.getGerminationTime());
-        existingSeed.setSeason(newSeedDetails.getSeason());
+
+        if (name != null) existingSeed.setName(name);
+        if (description != null) existingSeed.setDescription(description);
+        if (price != null) existingSeed.setPrice(price);
+        if (category != null) existingSeed.setCategory(category);
+        if (quantity != null) existingSeed.setQuantity(quantity);
+        if (seedType != null) existingSeed.setSeedType(seedType);
+        if (germinationTime != null) existingSeed.setGerminationTime(germinationTime);
+        if (season != null) existingSeed.setSeason(season);
 
         seedRepository.save(existingSeed);
         return "Seed Updated Successfully";
