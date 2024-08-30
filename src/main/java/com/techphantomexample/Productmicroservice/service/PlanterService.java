@@ -40,20 +40,20 @@ public class PlanterService {
 
     }
 
-    public String updatePlanter(int id, PlanterDto newPlanterDetails) {
+    public String updatePlanter(int id, String name, String description, Double price, String category, Integer quantity, String material, String dimensions, String color) {
         if (!planterRepository.existsById(id)) {
             throw new PlanterException("Planter not found");
         }
         Planter existingPlanter = planterRepository.findById(id).get();
-        PlanterValidation.validatePlanter(newPlanterDetails,planterRepository);
-        existingPlanter.setName(newPlanterDetails.getName());
-        existingPlanter.setDescription(newPlanterDetails.getDescription());
-        existingPlanter.setPrice(newPlanterDetails.getPrice());
-        existingPlanter.setCategory(newPlanterDetails.getCategory());
-        existingPlanter.setQuantity(newPlanterDetails.getQuantity());
-        existingPlanter.setMaterial(newPlanterDetails.getMaterial());
-        existingPlanter.setDimensions(newPlanterDetails.getDimensions());
-        existingPlanter.setColor(newPlanterDetails.getColor());
+
+        if (name != null) existingPlanter.setName(name);
+        if (description != null) existingPlanter.setDescription(description);
+        if (price != null) existingPlanter.setPrice(price);
+        if (category != null) existingPlanter.setCategory(category);
+        if (quantity != null) existingPlanter.setQuantity(quantity);
+        if (material != null) existingPlanter.setMaterial(material);
+        if (dimensions != null) existingPlanter.setDimensions(dimensions);
+        if (color != null) existingPlanter.setColor(color);
 
         planterRepository.save(existingPlanter);
         return "Planter Updated Successfully";
