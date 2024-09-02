@@ -47,20 +47,38 @@ public class PlantService {
         if (!plantRepository.existsById(id)) {
             throw new PlantException("Plant not found");
         }
+
         Plant existingPlant = plantRepository.findById(id).get();
-        PlantValidation.validatePlant(newPlantDetails,plantRepository);
-        existingPlant.setName(newPlantDetails.getName());
-        existingPlant.setDescription(newPlantDetails.getDescription());
-        existingPlant.setPrice(newPlantDetails.getPrice());
-        existingPlant.setCategory(newPlantDetails.getCategory());
-        existingPlant.setQuantity(newPlantDetails.getQuantity());
-        existingPlant.setTypeOfPlant(newPlantDetails.getTypeOfPlant());
-        existingPlant.setSunlightRequirements(newPlantDetails.getSunlightRequirements());
-        existingPlant.setWateringFrequency(newPlantDetails.getWateringFrequency());
+        if (newPlantDetails.getName() != null) {
+            existingPlant.setName(newPlantDetails.getName());
+        }
+        if (newPlantDetails.getDescription() != null) {
+            existingPlant.setDescription(newPlantDetails.getDescription());
+        }
+        if (newPlantDetails.getPrice() != 0) {
+            existingPlant.setPrice(newPlantDetails.getPrice());
+        }
+        if (newPlantDetails.getCategory() != null) {
+            existingPlant.setCategory(newPlantDetails.getCategory());
+        }
+        if (newPlantDetails.getQuantity() != 0) {
+            existingPlant.setQuantity(newPlantDetails.getQuantity());
+        }
+        if (newPlantDetails.getTypeOfPlant() != null) {
+            existingPlant.setTypeOfPlant(newPlantDetails.getTypeOfPlant());
+        }
+        if (newPlantDetails.getSunlightRequirements() != null) {
+            existingPlant.setSunlightRequirements(newPlantDetails.getSunlightRequirements());
+        }
+        if (newPlantDetails.getWateringFrequency() != null) {
+            existingPlant.setWateringFrequency(newPlantDetails.getWateringFrequency());
+        }
 
         plantRepository.save(existingPlant);
+
         return "Plant Updated Successfully";
     }
+
 
     public String deletePlant(int plantId) {
         if (!plantRepository.existsById(plantId)) {

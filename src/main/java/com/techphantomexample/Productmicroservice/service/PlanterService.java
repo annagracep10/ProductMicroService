@@ -45,15 +45,30 @@ public class PlanterService {
             throw new PlanterException("Planter not found");
         }
         Planter existingPlanter = planterRepository.findById(id).get();
-        PlanterValidation.validatePlanter(newPlanterDetails,planterRepository);
-        existingPlanter.setName(newPlanterDetails.getName());
-        existingPlanter.setDescription(newPlanterDetails.getDescription());
-        existingPlanter.setPrice(newPlanterDetails.getPrice());
-        existingPlanter.setCategory(newPlanterDetails.getCategory());
-        existingPlanter.setQuantity(newPlanterDetails.getQuantity());
-        existingPlanter.setMaterial(newPlanterDetails.getMaterial());
-        existingPlanter.setDimensions(newPlanterDetails.getDimensions());
-        existingPlanter.setColor(newPlanterDetails.getColor());
+        if (newPlanterDetails.getName() != null) {
+            existingPlanter.setName(newPlanterDetails.getName());
+        }
+        if (newPlanterDetails.getDescription() != null) {
+            existingPlanter.setDescription(newPlanterDetails.getDescription());
+        }
+        if (newPlanterDetails.getPrice() != 0) {
+            existingPlanter.setPrice(newPlanterDetails.getPrice());
+        }
+        if (newPlanterDetails.getCategory() != null) {
+            existingPlanter.setCategory(newPlanterDetails.getCategory());
+        }
+        if (newPlanterDetails.getQuantity() != 0) {
+            existingPlanter.setQuantity(newPlanterDetails.getQuantity());
+        }
+        if (newPlanterDetails.getMaterial() != null) {
+            existingPlanter.setMaterial(newPlanterDetails.getMaterial());
+        }
+        if (newPlanterDetails.getDimensions() != null) {
+            existingPlanter.setDimensions(newPlanterDetails.getDimensions());
+        }
+        if (newPlanterDetails.getColor() != null) {
+            existingPlanter.setColor(newPlanterDetails.getColor());
+        }
 
         planterRepository.save(existingPlanter);
         return "Planter Updated Successfully";
